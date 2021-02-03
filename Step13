@@ -1,0 +1,112 @@
+Make real use of the Target Date Field
+initBinder method
+pom.xml
+<dependency>
+		<groupId>org.webjars</groupId>
+		<artifactId>bootstrap-datepicker</artifactId>
+		<version>1.0.1</version>
+	</dependency>
+  
+  
+  LoginController
+  
+	@InitBinder
+	protected void initBinder(WebDataBinder binder) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		binder.registerCustomEditor(Date.class, new CustomDateEditor(
+				dateFormat, false));
+	}
+  
+  
+  
+  
+  /src/main/webapp/WEB-INF/views/list-todos.jsp
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
+<html>
+<head>
+<title>Todos for ${name}</title>
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<table class="table table-striped">
+			<caption>Your Todos are</caption>
+			<thead>
+				<tr>
+					<th>Description</th>
+					<th>Date</th>
+					<th>Completed</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<c:forEach items="${todos}" var="todo">
+					<tr>
+						<td>${todo.desc}</td>
+						<td><fmt:formatDate pattern="dd/MM/yyyy"
+								value="${todo.targetDate}" /></td>
+						<td>${todo.done}</td>
+						<td><a type="button" class="btn btn-primary"
+							href="/update-todo?id=${todo.id}">Edit</a> <a type="button"
+							class="btn btn-warning" href="/delete-todo?id=${todo.id}">Delete</a>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<div>
+			<a type="button" class="btn btn-success" href="/add-todo">Add</a>
+		</div>
+	</div>
+
+	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+	<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+
+src/main/webapp/WEB-INF/views/todo.jsp
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<html>
+<head>
+<title>Your Todo</title>
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+    rel="stylesheet">
+
+</head>
+<body>
+
+    <div class="container">
+        <form:form method="post" commandName="todo">
+            <form:hidden path="id" />
+            <fieldset class="form-group">
+                <form:label path="desc">Description</form:label>
+                <form:input path="desc" type="text" class="form-control"
+                    required="required" />
+                <form:errors path="desc" cssClass="text-warning" />
+            </fieldset>
+            <fieldset class="form-group">
+                <form:label path="targetDate">Target Date</form:label>
+                <form:input path="targetDate" type="text" class="form-control"
+                    required="required" />
+                <form:errors path="targetDate" cssClass="text-warning" />
+            </fieldset>
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form:form>
+    </div>
+
+    <script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <script
+        src="webjars/bootstrap-datepicker/1.0.1/js/bootstrap-datepicker.js"></script>
+
+    <script>
+        $('#targetDate').datepicker({
+            format : 'dd/mm/yyyy'
+        });
+    </script>
+</body>
+</html>
+
