@@ -108,10 +108,10 @@ public class TodoService {
 	private static int todoCount = 3;
 
 	static {
-		todos.add(new Todo(1, "in28Minutes", "Learn Spring MVC", new Date(),
+		todos.add(new Todo(1, "Poulami", "Learn Spring MVC", new Date(),
 				false));
-		todos.add(new Todo(2, "in28Minutes", "Learn Struts", new Date(), false));
-		todos.add(new Todo(3, "in28Minutes", "Learn Hibernate", new Date(),
+		todos.add(new Todo(2, "Poulami", "Learn JPA", new Date(), false));
+		todos.add(new Todo(3, "Poulami", "Learn Hibernate", new Date(),
 				false));
 	}
 
@@ -148,7 +148,7 @@ public class TodoController {
 
 	@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
 	public String showLoginPage(ModelMap model) {
-		model.addAttribute("todos", service.retrieveTodos("in28Minutes"));
+		model.addAttribute("todos", service.retrieveTodos("Poulami"));
 		return "list-todos";
 	}
   
