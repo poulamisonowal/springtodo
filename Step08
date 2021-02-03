@@ -1,0 +1,60 @@
+Add bootstrap to give basic formatting to the page : We use bootstrap classes container,table and table-striped.
+We will use webjars
+
+pom.xml
+<dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>3.3.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jquery</artifactId>
+            <version>1.9.1</version>
+        </dependency>
+        
+todo-sevlet.xml
+
+<mvc:resources mapping="/webjars/**" location="/webjars/"/>
+
+
+//src/main/webapp/WEB-INF/views/list-todos.jsp
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<html>
+<head>
+<title>Todos for ${name}</title>
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+    rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<table class="table table-striped">
+			<caption>Your Todos are</caption>
+
+			<thead>
+				<tr>
+					<th>Description</th>
+					<th>Date</th>
+					<th>Completed</th>
+				</tr>
+			</thead>
+
+			<tbody>
+				<c:forEach items="${todos}" var="todo">
+					<tr>
+						<td>${todo.desc}</td>
+						<td>${todo.targetDate}</td>
+						<td>${todo.done}</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<div>
+			<a class="button" href="add-todo">Add</a>
+		</div>
+	</div>
+
+	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>
