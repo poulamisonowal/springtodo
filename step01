@@ -1,0 +1,167 @@
+ configure application to use Spring MVC
+
+Add required jars to the project
+Spring MVC uses Front Controller Pattern -> Dispatcher Servlet.  Add Dispatcher Servlet to web.xml
+DispatcherServlet needs an Spring Application Context to launch. We will create an xml (/WEB-INF/todo-servlet.xml).
+ Add Spring Context
+ 
+ Create Flow
+ Flow 1. Login Servlet -> GET -> login.jsp
+Flow 2. Login Servlet -> POST (Success) -> welcome.jsp
+Flow 3. Login Servlet -> POST (Failure) -> login.jsp (with error message)
+ 
+ pom.xml
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.todo</groupId>
+	<artifactId>in28Minutes-springmvc</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>war</packaging>
+
+
+
+//pom.xml
+
+<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-webmvc</artifactId>
+			<version>5.3.3</version>
+		</dependency>
+	<!-- https://mvnrepository.com/artifact/org.springframework/spring-beans -->
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-beans</artifactId>
+    <version>5.3.3</version>
+</dependency>
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-core</artifactId>
+    <version>5.3.3</version>
+</dependency>
+		<dependency>
+ <groupId>org.springframework</groupId>
+  <artifactId>spring-context</artifactId>
+   <version>5.3.3</version>
+</dependency>
+  <dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>javax.servlet-api</artifactId>
+    <version>4.0.1</version>
+    <scope>provided</scope>
+</dependency> 
+<dependency>
+     <groupId>javax.servlet</groupId>
+			<artifactId>jstl</artifactId>
+			<version>1.2</version>
+		</dependency>
+    
+    
+    //web.xml
+       <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0"> 
+    
+   <display-name>Spring MVC Application</display-name>
+    <servlet>
+      <servlet-name>todo</servlet-name>
+      <servlet-class>
+         org.springframework.web.servlet.DispatcherServlet
+      </servlet-class>
+    <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>todo1</servlet-name>
+      <url-pattern>/</url-pattern>
+   </servlet-mapping>
+
+</web-app>
+          
+       //todo-servlet.xml 
+        <?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   
+    xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:mvc="http://www.springframework.org/schema/mvc"  
+    xsi:schemaLocation="  
+        http://www.springframework.org/schema/beans  
+        http://www.springframework.org/schema/beans/spring-beans.xsd  
+        http://www.springframework.org/schema/context  
+        http://www.springframework.org/schema/context/spring-context.xsd  
+        http://www.springframework.org/schema/mvc  
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd">  
+
+    <context:component-scan base-package="com" />
+
+    <mvc:annotation-driven />
+   <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+
+<property value="/WEB-INF/views/" name="prefix"/>
+
+<property value=".jsp" name="suffix"/>
+
+Create LoginService
+
+public class LoginService {
+	public boolean validateUser(String user, String password) {
+		return user.equalsIgnoreCase("Poulami") && password.equals("dummy");
+	}
+
+}
+Create LognControllee
+@Controller
+	public class LoginController {
+	
+	private LoginService service = new LoginService();
+	
+	  @RequestMapping(value = "/", method = RequestMethod.GET) 
+	  public String showLoginPage() { 
+		  return "login"; 
+		  }
+	  
+	  @RequestMapping(value = "/login", method = RequestMethod.POST) 
+	  public String showWelcomePage(HttpServletRequest request) {
+	  
+	  String name = request.getParameter("name"); 
+	  String password=request.getParameter("password");
+	  boolean isValidUser =service.validateUser(name, password); 
+	  if (isValidUser) {
+	  System.out.println(isValidUser); 
+	  return "welcome";
+	  
+	  } 
+	  else { 
+		  request.setAttribute("errorMessage", "Invalid Credentials!!");
+	  return "login";
+	  }
+	  
+	  
+	  }
+	 Create login.jsp
+   <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+    <p><font color="red">${errorMessage}</font></p>
+    <form action=login method="post">
+        Name : <input name="name" required type="text" /> Password : <input name="password" type="password" /> <input type="submit" />
+    </form>
+</body>
+</html>
+
+Create welcome.jsp
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<title>Yahoo!!</title>
+</head>
+<body>
+Welcome ${name}
+</body>
+</html>
