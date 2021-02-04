@@ -1,0 +1,99 @@
+Format Add Todo Page
+Add Html5 Form Validation
+Add @Size(min = 10, message = "Enter atleast 10 Characters.") i desc filed of ToDoModel class
+
+
+pom.xml		<dependency>
+    			<groupId>org.hibernate</groupId>
+    			<artifactId>hibernate-validator</artifactId>
+    			<version>5.0.2.Final</version>
+ 		</dependency>
+    
+    
+    change loginContolle.jave addTodo method as folloeing
+    @RequestMapping(value = "/add-todo", method = RequestMethod.POST)
+	public String addTodo(ModelMap model, @Valid Todo todo, BindingResult result) {
+
+		if (result.hasErrors())
+			return "todo";
+
+		service.addTodo((String) model.get("name"), todo.getDesc(), new Date(),
+				false);
+		model.clear();// to prevent request parameter "name" to be passed
+		return "redirect:/list-todos";
+	}
+
+/src/main/webapp/WEB-INF/views/list-todos.jsp
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<html>
+<head>
+<title>Todos for ${name}</title>
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+    rel="stylesheet">
+</head>
+<body>
+	<div class="container">
+		<table class="table table-striped">
+			<caption>Your Todos are</caption>
+			<thead>
+				<tr>
+					<th>Description</th>
+					<th>Date</th>
+					<th>Completed</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			<tbody>
+				<c:forEach items="${todos}" var="todo">
+					<tr>
+						<td>${todo.desc}</td>
+						<td>${todo.targetDate}</td>
+						<td>${todo.done}</td>
+						<td>
+							<a type="button" class="btn btn-warning" 
+								href="delete-todo?id=${todo.id}">Delete</a>
+						</td>
+					</tr>
+				</c:forEach>
+			</tbody>
+		</table>
+		<div>
+			<a type="button" class="btn btn-success" href="dd-todo">Add</a>
+		</div>
+		</div>
+
+	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+    <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</body>
+</html>	
+
+/src/main/webapp/WEB-INF/views/todo.jsp
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
+<html>
+<head>
+<title>Your Todo</title>
+<link href="webjars/bootstrap/3.3.6/css/bootstrap.min.css"
+	rel="stylesheet">
+</head>
+<body>
+
+	<div class="container">
+		<form:form method="post" commandName="todo">
+			<fieldset class="form-group">
+				<form:label path="desc">Description</form:label>
+				<form:input path="desc" type="text" class="form-control"
+					required="required"/>
+				<form:errors path="desc" cssClass="text-warning" />
+
+			</fieldset>
+			<button type="submit" class="btn btn-success">Add</button>
+		</form:form>
+	</div>
+
+	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
+	<script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+</body>
+</html>
+	
