@@ -20,7 +20,7 @@ public class LoginController {
 		return "login";
 	}
 
-	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	@RequestMapping(value = "login", method = RequestMethod.POST)
 	public String handleUserLogin(ModelMap model, @RequestParam String name,
 			@RequestParam String password) {
 
@@ -33,7 +33,7 @@ public class LoginController {
 		return "welcome";
 	}
 }
-@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
+@RequestMapping(value = "list-todos", method = RequestMethod.GET)
 	public String showLoginPage(ModelMap model, String name) {
 		String user = (String) model.get("name");
 		model.addAttribute("todos", service.retrieveTodos(user));
@@ -121,6 +121,6 @@ public class TodoService {
 <title>Yahoo!!</title>
 </head>
 <body>
-Welcome ${name}. You are now authenticated. <a href="/list-todos">Click here</a> to start maintaining your todo's.
+Welcome ${name}. You are now authenticated. <a href="list-todos">Click here</a> to start maintaining your todo's.
 </body>
 </html>
