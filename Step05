@@ -1,0 +1,126 @@
+Adding @SessioonAttributes("name") 
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttributes;
+
+@Controller
+@SessionAttributes("name")
+public class LoginController {
+
+	@Autowired
+	private LoginService loginService;
+
+	@RequestMapping(value = "/login", method = RequestMethod.GET)
+	public String showLoginPage() {
+		return "login";
+	}
+
+	@RequestMapping(value = "/login", method = RequestMethod.POST)
+	public String handleUserLogin(ModelMap model, @RequestParam String name,
+			@RequestParam String password) {
+
+		if (!loginService.validateUser(name, password)) {
+			model.put("errorMessage", "Invalid Credentials");
+			return "login";
+		}
+
+		model.put("name", name);
+		return "welcome";
+	}
+}
+@RequestMapping(value = "/list-todos", method = RequestMethod.GET)
+	public String showLoginPage(ModelMap model, String name) {
+		String user = (String) model.get("name");
+		model.addAttribute("todos", service.retrieveTodos(user));
+		return "list-
+   todos";
+	}
+
+TodoService.class
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+
+
+@Service
+public class TodoService {
+	private static List<Todo> todos = new ArrayList<Todo>();
+	private static int todoCount = 3;
+
+	static {
+		todos.add(new Todo(1, "Poulami", "Learn Spring MVC", new Date(),
+				false));
+		todos.add(new Todo(2, "Poulami", "Learn Struts", new Date(), false));
+		todos.add(new Todo(3, "Poulami", "Learn Hibernate", new Date(),
+				false));
+	}
+
+	public List<Todo> retrieveTodos(String user) {
+		List<Todo> filteredTodos = new ArrayList<Todo>();
+		for (Todo todo : todos) {
+			if (todo.getUser().equals(user))
+				filteredTodos.add(todo);
+		}
+		return filteredTodos;
+	}
+
+	public void addTodo(String name, String desc, Date targetDate, boolean isDone) {
+		todos.add(new Todo(++todoCount, name, desc, targetDate, isDone));
+	}
+
+	public void deleteTodo(int id) {
+		Iterator<Todo> iterator = todos.iterator();
+		while (iterator.hasNext()) {
+			Todo todo = iterator.next();
+			if (todo.getId() == id) {
+				iterator.remove();
+			}
+		}
+	}
+  
+}
+
+
+/src/main/webapp/WEB-INF/views/list-todos.jsp
+<html>
+<head>
+<title>Todos for ${name}</title>
+</head>
+<body>
+<H1>Your Todos</H1>
+ ${todos}
+</body>
+</html>
+
+
+/src/main/webapp/WEB-INF/views/login.jsp
+<html>
+<head>
+<title>Yahoo!!</title>
+</head>
+<body>
+    <p><font color="red">${errorMessage}</font></p>
+    <form action="login" method="POST">
+        Name : <input name="name" type="text" /> Password : <input name="password" type="password" /> <input type="submit" />
+    </form>
+</body>
+</html>
+
+/src/main/webapp/WEB-INF/views/welcome.jsp
+<html>
+<head>
+<title>Yahoo!!</title>
+</head>
+<body>
+Welcome ${name}. You are now authenticated. <a href="/list-todos">Click here</a> to start maintaining your todo's.
+</body>
+</html>
