@@ -7,7 +7,7 @@ In LoginController add
 
 		return "redirect:/list-todos";
     }
-    
+    Add delete button in list-todos,jsp. if not added earlier
     
     /src/main/webapp/WEB-INF/views/list-todos.jsp
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
