@@ -75,13 +75,19 @@ add bootstrap in todo.jsp
     rel="stylesheet">
 </head>
 <body>
-<div class=container>
-	<div class="container">
-		<form action="add-todo" method="POST">
-        Description : <input name="desc" type="text" /> <input  class="btn btn-primary" type="submit" value="add" />
-    </form>
+<div class="container">
+		<form method="post" action="todo">
+			
+			<fieldset class="form-group">
+				<label>Description</label>
+				<input type="text" class="form-control"
+					required="required"/>
+				
+			</fieldset>
+			<button type="submit" class="btn btn-success">Submit</button>
+		</form>
 	</div>
 
-</div>
+
 	<script src="webjars/jquery/1.9.1/jquery.min.js"></script>
     <script src="webjars/bootstrap/3.3.6/js/bootstrap.min.js"></script>
