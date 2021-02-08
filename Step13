@@ -9,7 +9,17 @@ pom.xml
   
   
   LoginController
-  
+ import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import java.text.SimpleDateFormat;
+Add following
+
+  class LoginController{
+	@Autowired
+	LoginService service;
+	@Autowired
+	TodoService service1;
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
